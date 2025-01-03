@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to TIKO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            font-size: 24px;
+            color: #333333;
+        }
+        .ref-code {
+            color: #ff9900;
+            text-align: center;
+            font-size: 36px;
+            margin: 20px 0;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .cta-button {
+            text-decoration: none;
+            background-color: #ff9900;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 18px;
+            display: inline-block;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <h1 class="header">Halo, {{username}} 👋</h1>
+        <p>Selamat datang di <strong>TIKO</strong>! Email Anda telah berhasil diverifikasi. 🎉</p>
+        <p>Berikut adalah kode referral unik Anda:</p>
+        <h2 class="ref-code">{{refCode}}</h2>
+        <p>Bagikan kode ini kepada teman-teman Anda dan dapatkan hadiah dari TIKO!</p>
+        
+        <!-- Verification Button -->
+        <div class="button-container">
+            <a href={{linkUser}} class="cta-button">
+                Klik di sini untuk Verifikasi Akun Anda
+            </a>
+        </div>
+        <p>Selamat bersenang-senang,<br><strong>Tim TIKO</strong></p>
+        <div class="footer">
+            <p>&copy; 2024 TIKO. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String      @id @default(uuid())
+  username     String
+  email        String      @unique
+  password     String
+  avatar       String?     @default("https://res.cloudinary.com/dxpeofir6/image/upload/v1734147636/defaultphotos_tvyjja.jpg")
+  isVerify     Boolean     @default(false)
+  refCode      String?     @unique
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  points       Int         @default(0)
+  refCodeBy    String?
+  refLogId     Int?
+  percentage   Float?
+  userCouponId Int?
+  orders       Order[]
+  reviews      Reviews[]
+  RefLog       RefLog?     @relation(fields: [refLogId], references: [id])
+  usercoupon   UserCoupon? @relation(fields: [userCouponId], references: [id])
+}
+
+model Promotor {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  avatar    String?  @default("https://res.cloudinary.com/dxpeofir6/image/upload/v1734149527/defaultadmin_ssc0ah.jpg")
+  isVerify  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  events    Event[]
+}
+
+model UserCoupon {
+  id          Int           @id @default(autoincrement())
+  isRedeem    Boolean       @default(true)
+  percentage  Float         @default(0.0)
+  expiredAt   DateTime
+  orderdetail OrderDetail[]
+  User        User[]
+}
+
+model RefLog {
+  id        Int      @id @default(autoincrement())
+  pointGet  Int      @default(0)
+  createdAt DateTime @default(now())
+  expiredAt DateTime
+  isUsed    Boolean
+  user      User[]
+}
+
+model Event {
+  id          Int       @id @default(autoincrement())
+  title       String
+  category    Category
+  location    Location
+  venue       String
+  description String
+  date        DateTime
+  time        DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  promotorId  String?
+  thumbnail   String?   @default("https://res.cloudinary.com/dxpeofir6/image/upload/v1734167683/eventdefault_fuvrcj.webp")
+  slug        String    @unique
+  promotor    Promotor? @relation(fields: [promotorId], references: [id], onDelete: Cascade)
+  orders      Order[]
+  tickets     Ticket[]
+  reviews     Reviews[]
+}
+
+model Reviews {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  rating    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String?
+  eventId   Int?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     Event?   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id           Int           @id @default(autoincrement())
+  totalPrice   Int
+  finalPrice   Int
+  paymentProof String?
+  status       Status
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
+  userId       String?
+  eventId      Int?
+  event        Event?        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  details      OrderDetail[]
+}
+
+model Ticket {
+  id            Int          @id @default(autoincrement())
+  category      String
+  price         Int
+  eventId       Int?
+  orderDetailId Int?
+  quantity      Int
+  event         Event?       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  orderDetail   OrderDetail? @relation(fields: [orderDetailId], references: [id], onDelete: Cascade)
+}
+
+model OrderDetail {
+  id           Int         @id @default(autoincrement())
+  quantity     Int
+  orderId      Int?
+  userCouponId Int?
+  order        Order?      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  UserCoupon   UserCoupon? @relation(fields: [userCouponId], references: [id])
+  tickets      Ticket[]
+}
+
+enum Category {
+  Music
+  Orchestra
+  Opera
+  Other
+}
+
+enum Location {
+  Bandung
+  Bali
+  Surabaya
+  Jakarta
+}
+
+enum Status {
+  PAID
+  CANCELED
+  PENDING
+}
